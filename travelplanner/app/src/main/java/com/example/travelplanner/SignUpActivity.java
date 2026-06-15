@@ -27,6 +27,8 @@ public class SignUpActivity extends AppCompatActivity {
     private Spinner spGender;
     private Spinner spCategory;
 
+    private DatabaseHelper databaseHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +50,8 @@ public class SignUpActivity extends AppCompatActivity {
 
         spGender = findViewById(R.id.spGender);
         spCategory = findViewById(R.id.spCategory);
+
+        databaseHelper = new DatabaseHelper(this);
 
         Button btnCreateAccount = findViewById(R.id.btnCreateAccount);
 
@@ -165,9 +169,50 @@ public class SignUpActivity extends AppCompatActivity {
             return;
         }
 
-        Toast.makeText(this, "registration successful", Toast.LENGTH_SHORT).show();
+        String gender = spGender.getSelectedItem().toString();
+        String category = spCategory.getSelectedItem().toString();
 
-        startActivity(new Intent(this, LoginActivity.class));
-        finish();
+        if (databaseHelper.emailExists(email)) {
+
+            etEmail.setError("email already exists");
+            etEmail.requestFocus();
+            return;
+        }
+
+        boolean inserted = databaseHelper.insertUser(
+                firstName,
+                lastName,
+                email,
+                phone,
+                gender,
+                category,
+                password
+        );
+
+        if (inserted) {
+
+            Toast.makeText(
+                    this,
+                    "registration successful",
+                    Toast.LENGTH_SHORT
+            ).show();
+
+            startActivity(
+                    new Intent(
+                            SignUpActivity.this,
+                            LoginActivity.class
+                    )
+            );
+
+            finish();
+
+        } else {
+
+            Toast.makeText(
+                    this,
+                    "registration failed",
+                    Toast.LENGTH_SHORT
+            ).show();
+        }
     }
 }
