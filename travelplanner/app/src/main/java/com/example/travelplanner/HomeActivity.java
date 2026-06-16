@@ -218,6 +218,30 @@ public class HomeActivity extends AppCompatActivity {
                 tripList.addAll(trips);
                 allTrips.addAll(trips);
 
+                DatabaseHelper databaseHelper =
+                        new DatabaseHelper(
+                                HomeActivity.this
+                        );
+
+                for (Trip trip : trips) {
+
+                    if (!databaseHelper.tripExists(
+                            trip.getId()
+                    )) {
+
+                        databaseHelper.insertTrip(
+                                trip.getId(),
+                                trip.getDestination(),
+                                trip.getCountry(),
+                                trip.getDurationDays(),
+                                trip.getPrice(),
+                                trip.getRating(),
+                                trip.getDescription(),
+                                trip.getImage()
+                        );
+                    }
+                }
+
                 applyFilters();
 
                 Toast.makeText(
