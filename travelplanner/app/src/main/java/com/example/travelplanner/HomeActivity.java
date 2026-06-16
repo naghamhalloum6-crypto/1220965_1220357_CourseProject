@@ -29,6 +29,7 @@ public class HomeActivity extends AppCompatActivity {
     private EditText etSearch;
 
     private Spinner spCountryFilter;
+    private android.widget.TextView txtEmptyResult;
 
     private ArrayList<Trip> tripList;
 
@@ -71,6 +72,9 @@ public class HomeActivity extends AppCompatActivity {
 
         spCountryFilter =
                 findViewById(R.id.spCountryFilter);
+
+        txtEmptyResult =
+                findViewById(R.id.txtEmptyResult);
 
         tripList = new ArrayList<>();
 
@@ -347,5 +351,18 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         tripAdapter.notifyDataSetChanged();
+
+        if (tripList.isEmpty()) {
+
+            txtEmptyResult.setVisibility(
+                    View.VISIBLE
+            );
+
+        } else {
+
+            txtEmptyResult.setVisibility(
+                    View.GONE
+            );
+        }
     }
 }
