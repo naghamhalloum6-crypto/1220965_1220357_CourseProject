@@ -39,5 +39,64 @@ public class TripDetailsActivity extends AppCompatActivity {
 
         txtDescription =
                 findViewById(R.id.txtDescription);
+
+        String destination =
+                getIntent().getStringExtra(
+                        "destination"
+                );
+
+        String country =
+                getIntent().getStringExtra(
+                        "country"
+                );
+
+        int duration =
+                getIntent().getIntExtra(
+                        "duration",
+                        0
+                );
+
+        double price =
+                getIntent().getDoubleExtra(
+                        "price",
+                        0
+                );
+
+        double rating =
+                getIntent().getDoubleExtra(
+                        "rating",
+                        0
+                );
+
+        String description =
+                getIntent().getStringExtra(
+                        "description"
+                );
+
+        txtDestination.setText(
+                destination
+        );
+
+        txtCountry.setText(
+                "Country: " + country
+        );
+
+        txtDuration.setText(
+                "Duration: " +
+                        duration +
+                        " days"
+        );
+
+        txtPrice.setText(
+                "Price: $" + price
+        );
+
+        txtRating.setText(
+                "Rating: " + rating
+        );
+
+        txtDescription.setText(
+                description
+        );
     }
 }

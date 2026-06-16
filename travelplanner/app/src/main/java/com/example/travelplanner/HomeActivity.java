@@ -17,6 +17,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import android.content.Intent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +77,49 @@ public class HomeActivity extends AppCompatActivity {
         allTrips = new ArrayList<>();
 
         tripAdapter =
-                new TripAdapter(tripList);
+                new TripAdapter(
+                        tripList,
+                        trip -> {
+
+                            Intent intent =
+                                    new Intent(
+                                            HomeActivity.this,
+                                            TripDetailsActivity.class
+                                    );
+
+                            intent.putExtra(
+                                    "destination",
+                                    trip.getDestination()
+                            );
+
+                            intent.putExtra(
+                                    "country",
+                                    trip.getCountry()
+                            );
+
+                            intent.putExtra(
+                                    "duration",
+                                    trip.getDurationDays()
+                            );
+
+                            intent.putExtra(
+                                    "price",
+                                    trip.getPrice()
+                            );
+
+                            intent.putExtra(
+                                    "rating",
+                                    trip.getRating()
+                            );
+
+                            intent.putExtra(
+                                    "description",
+                                    trip.getDescription()
+                            );
+
+                            startActivity(intent);
+                        }
+                );
 
         recyclerTrips.setLayoutManager(
                 new LinearLayoutManager(this)

@@ -12,12 +12,26 @@ import java.util.ArrayList;
 
 public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder> {
 
+    // click listener
+
+    public interface OnTripClickListener {
+
+        void onTripClick(Trip trip);
+    }
+
     // list of trips
 
     private ArrayList<Trip> tripList;
 
-    public TripAdapter(ArrayList<Trip> tripList) {
+    private OnTripClickListener listener;
+
+    public TripAdapter(
+            ArrayList<Trip> tripList,
+            OnTripClickListener listener
+    ) {
+
         this.tripList = tripList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -26,8 +40,6 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
             @NonNull ViewGroup parent,
             int viewType
     ) {
-
-        // create trip item view
 
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(
@@ -45,11 +57,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
             int position
     ) {
 
-        // get current trip
-
         Trip trip = tripList.get(position);
-
-        // display trip data
 
         holder.txtDestination.setText(
                 trip.getDestination()
@@ -74,12 +82,16 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
                 "Rating: " +
                         trip.getRating()
         );
+
+        holder.itemView.setOnClickListener(v -> {
+
+            listener.onTripClick(trip);
+
+        });
     }
 
     @Override
     public int getItemCount() {
-
-        // prevent crash if list is null
 
         if (tripList == null) {
             return 0;
@@ -87,8 +99,6 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
 
         return tripList.size();
     }
-
-    // view holder class
 
     public static class TripViewHolder
             extends RecyclerView.ViewHolder {
