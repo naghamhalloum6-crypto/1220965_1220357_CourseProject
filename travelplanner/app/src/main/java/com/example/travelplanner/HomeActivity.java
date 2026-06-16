@@ -88,7 +88,7 @@ public class HomeActivity extends AppCompatActivity {
 
         loadTripsFromApi();
 
-        // search trips by destination
+        // search trips
 
         etSearch.addTextChangedListener(
                 new TextWatcher() {
@@ -111,9 +111,7 @@ public class HomeActivity extends AppCompatActivity {
                             int count
                     ) {
 
-                        filterTrips(
-                                s.toString()
-                        );
+                        applyFilters();
                     }
 
                     @Override
@@ -126,7 +124,7 @@ public class HomeActivity extends AppCompatActivity {
         );
     }
 
-// get trips from api
+    // load trips from api
 
     private void loadTripsFromApi() {
 
@@ -172,7 +170,7 @@ public class HomeActivity extends AppCompatActivity {
                 tripList.addAll(trips);
                 allTrips.addAll(trips);
 
-                tripAdapter.notifyDataSetChanged();
+                applyFilters();
 
                 Toast.makeText(
                         HomeActivity.this,
@@ -184,35 +182,7 @@ public class HomeActivity extends AppCompatActivity {
         }).start();
     }
 
-// filter trips by destination
-
-    private void filterTrips(String keyword) {
-
-        tripList.clear();
-
-        if (keyword.isEmpty()) {
-
-            tripList.addAll(allTrips);
-
-        } else {
-
-            for (Trip trip : allTrips) {
-
-                if (trip.getDestination()
-                        .toLowerCase()
-                        .contains(
-                                keyword.toLowerCase()
-                        )) {
-
-                    tripList.add(trip);
-                }
-            }
-        }
-
-        tripAdapter.notifyDataSetChanged();
-    }
-
-// setup country filter
+    // setup country filter
 
     private void setupCountryFilter() {
 
@@ -254,13 +224,7 @@ public class HomeActivity extends AppCompatActivity {
                             long id
                     ) {
 
-                        String selectedCountry =
-                                parent.getItemAtPosition(position)
-                                        .toString();
-
-                        filterByCountry(
-                                selectedCountry
-                        );
+                        applyFilters();
                     }
 
                     @Override
@@ -273,29 +237,43 @@ public class HomeActivity extends AppCompatActivity {
         );
     }
 
-// filter trips by country
+    // combine search and filter
 
-    private void filterByCountry(String country) {
+    private void applyFilters() {
+
+        String keyword =
+                etSearch.getText()
+                        .toString()
+                        .trim()
+                        .toLowerCase();
+
+        String selectedCountry =
+                spCountryFilter.getSelectedItem()
+                        .toString();
 
         tripList.clear();
 
-        if (country.equals("All Countries")) {
+        for (Trip trip : allTrips) {
 
-            tripList.addAll(allTrips);
+            boolean matchesCountry =
+                    selectedCountry.equals("All Countries")
+                            ||
+                            trip.getCountry()
+                                    .equalsIgnoreCase(
+                                            selectedCountry
+                                    );
 
-        } else {
+            boolean matchesSearch =
+                    trip.getDestination()
+                            .toLowerCase()
+                            .contains(keyword);
 
-            for (Trip trip : allTrips) {
+            if (matchesCountry && matchesSearch) {
 
-                if (trip.getCountry()
-                        .equalsIgnoreCase(country)) {
-
-                    tripList.add(trip);
-                }
+                tripList.add(trip);
             }
         }
 
         tripAdapter.notifyDataSetChanged();
     }
-
 }
