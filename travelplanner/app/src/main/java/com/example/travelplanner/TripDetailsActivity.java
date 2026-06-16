@@ -1,12 +1,17 @@
 package com.example.travelplanner;
 
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
+
 public class TripDetailsActivity extends AppCompatActivity {
+
+    private ImageView imgTrip;
 
     private TextView txtDestination;
     private TextView txtCountry;
@@ -21,6 +26,9 @@ public class TripDetailsActivity extends AppCompatActivity {
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_trip_details);
+
+        imgTrip =
+                findViewById(R.id.imgTrip);
 
         txtDestination =
                 findViewById(R.id.txtDestination);
@@ -73,6 +81,11 @@ public class TripDetailsActivity extends AppCompatActivity {
                         "description"
                 );
 
+        String imageUrl =
+                getIntent().getStringExtra(
+                        "image"
+                );
+
         txtDestination.setText(
                 destination
         );
@@ -98,5 +111,9 @@ public class TripDetailsActivity extends AppCompatActivity {
         txtDescription.setText(
                 description
         );
+
+        Glide.with(this)
+                .load(imageUrl)
+                .into(imgTrip);
     }
 }

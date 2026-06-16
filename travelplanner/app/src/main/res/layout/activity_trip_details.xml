@@ -10,6 +10,13 @@
         android:orientation="vertical"
         android:padding="20dp">
 
+        <ImageView
+            android:id="@+id/imgTrip"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_marginBottom="16dp"
+            android:scaleType="centerCrop" />
+
         <TextView
             android:id="@+id/txtDestination"
             android:layout_width="wrap_content"

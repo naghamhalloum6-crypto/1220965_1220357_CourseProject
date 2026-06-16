@@ -117,6 +117,11 @@ public class HomeActivity extends AppCompatActivity {
                                     trip.getDescription()
                             );
 
+                            intent.putExtra(
+                                    "image",
+                                    trip.getImage()
+                            );
+
                             startActivity(intent);
                         }
                 );
