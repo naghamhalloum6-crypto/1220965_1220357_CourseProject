@@ -1,6 +1,7 @@
 package com.example.travelplanner;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -20,13 +22,18 @@ public class HomeActivity extends AppCompatActivity {
 
     private TripAdapter tripAdapter;
 
+    private static final String API_URL =
+            "https://mocki.io/v1/f3153911-eb21-4b36-8ca7-18ea3c77cc1a";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+
             Insets systemBars =
                     insets.getInsets(
                             WindowInsetsCompat.Type.systemBars()
@@ -45,26 +52,7 @@ public class HomeActivity extends AppCompatActivity {
         recyclerTrips =
                 findViewById(R.id.recyclerTrips);
 
-        // create trips list
-
         tripList = new ArrayList<>();
-
-        // add test trip
-
-        tripList.add(
-                new Trip(
-                        1,
-                        "Paris",
-                        "France",
-                        5,
-                        1200,
-                        4.8,
-                        "beautiful city",
-                        ""
-                )
-        );
-
-        // create adapter
 
         tripAdapter =
                 new TripAdapter(tripList);
@@ -74,5 +62,65 @@ public class HomeActivity extends AppCompatActivity {
         );
 
         recyclerTrips.setAdapter(tripAdapter);
+
+        // load trips from api
+
+        loadTripsFromApi();
+    }
+
+    // get trips from api
+
+    private void loadTripsFromApi() {
+
+        new Thread(() -> {
+
+            String json =
+                    HttpManager.getData(API_URL);
+
+            if (json == null) {
+
+                runOnUiThread(() ->
+                        Toast.makeText(
+                                HomeActivity.this,
+                                "failed to load trips",
+                                Toast.LENGTH_SHORT
+                        ).show()
+                );
+
+                return;
+            }
+
+            List<Trip> trips =
+                    TripJsonParser.getTripsFromJson(json);
+
+            if (trips == null) {
+
+                runOnUiThread(() ->
+                        Toast.makeText(
+                                HomeActivity.this,
+                                "invalid trip data",
+                                Toast.LENGTH_SHORT
+                        ).show()
+                );
+
+                return;
+            }
+
+            runOnUiThread(() -> {
+
+                tripList.clear();
+
+                tripList.addAll(trips);
+
+                tripAdapter.notifyDataSetChanged();
+
+                Toast.makeText(
+                        HomeActivity.this,
+                        "trips loaded successfully",
+                        Toast.LENGTH_SHORT
+                ).show();
+            });
+
+        }).start();
     }
 }
