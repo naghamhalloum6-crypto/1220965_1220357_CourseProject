@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "travel_planner.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -56,7 +56,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         admin.put("phone", "0000000000");
         admin.put("gender", "Male");
         admin.put("category", "Admin");
-        admin.put("password", "Admin123!");
+
+        // save admin password as hash
+
+        admin.put(
+                "password",
+                PasswordHelper.hashPassword("Admin123!")
+        );
 
         db.insert("users", null, admin);
     }

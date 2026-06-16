@@ -179,6 +179,11 @@ public class SignUpActivity extends AppCompatActivity {
             return;
         }
 
+        // encrypt password before saving
+
+        String encryptedPassword =
+                PasswordHelper.hashPassword(password);
+
         boolean inserted = databaseHelper.insertUser(
                 firstName,
                 lastName,
@@ -186,7 +191,7 @@ public class SignUpActivity extends AppCompatActivity {
                 phone,
                 gender,
                 category,
-                password
+                encryptedPassword
         );
 
         if (inserted) {

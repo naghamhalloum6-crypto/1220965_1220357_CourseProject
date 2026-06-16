@@ -71,8 +71,16 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        // encrypt password before checking login
+
+        String encryptedPassword =
+                PasswordHelper.hashPassword(password);
+
         boolean userExists =
-                databaseHelper.checkUser(email, password);
+                databaseHelper.checkUser(
+                        email,
+                        encryptedPassword
+                );
 
         if (!userExists) {
 
