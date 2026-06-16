@@ -3,7 +3,11 @@ package com.example.travelplanner;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -22,6 +26,8 @@ public class HomeActivity extends AppCompatActivity {
     private RecyclerView recyclerTrips;
 
     private EditText etSearch;
+
+    private Spinner spCountryFilter;
 
     private ArrayList<Trip> tripList;
 
@@ -62,6 +68,9 @@ public class HomeActivity extends AppCompatActivity {
         etSearch =
                 findViewById(R.id.etSearch);
 
+        spCountryFilter =
+                findViewById(R.id.spCountryFilter);
+
         tripList = new ArrayList<>();
 
         allTrips = new ArrayList<>();
@@ -75,7 +84,7 @@ public class HomeActivity extends AppCompatActivity {
 
         recyclerTrips.setAdapter(tripAdapter);
 
-        // load trips from api
+        setupCountryFilter();
 
         loadTripsFromApi();
 
@@ -117,7 +126,7 @@ public class HomeActivity extends AppCompatActivity {
         );
     }
 
-    // get trips from api
+// get trips from api
 
     private void loadTripsFromApi() {
 
@@ -175,13 +184,11 @@ public class HomeActivity extends AppCompatActivity {
         }).start();
     }
 
-    // filter trips by destination
+// filter trips by destination
 
     private void filterTrips(String keyword) {
 
         tripList.clear();
-
-        // show all trips if search is empty
 
         if (keyword.isEmpty()) {
 
@@ -204,4 +211,91 @@ public class HomeActivity extends AppCompatActivity {
 
         tripAdapter.notifyDataSetChanged();
     }
+
+// setup country filter
+
+    private void setupCountryFilter() {
+
+        String[] countries = {
+                "All Countries",
+                "Turkey",
+                "France",
+                "Italy",
+                "UAE",
+                "United Kingdom",
+                "Spain",
+                "Japan",
+                "Greece",
+                "Egypt",
+                "USA"
+        };
+
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(
+                        this,
+                        android.R.layout.simple_spinner_item,
+                        countries
+                );
+
+        adapter.setDropDownViewResource(
+                android.R.layout.simple_spinner_dropdown_item
+        );
+
+        spCountryFilter.setAdapter(adapter);
+
+        spCountryFilter.setOnItemSelectedListener(
+                new AdapterView.OnItemSelectedListener() {
+
+                    @Override
+                    public void onItemSelected(
+                            AdapterView<?> parent,
+                            View view,
+                            int position,
+                            long id
+                    ) {
+
+                        String selectedCountry =
+                                parent.getItemAtPosition(position)
+                                        .toString();
+
+                        filterByCountry(
+                                selectedCountry
+                        );
+                    }
+
+                    @Override
+                    public void onNothingSelected(
+                            AdapterView<?> parent
+                    ) {
+
+                    }
+                }
+        );
+    }
+
+// filter trips by country
+
+    private void filterByCountry(String country) {
+
+        tripList.clear();
+
+        if (country.equals("All Countries")) {
+
+            tripList.addAll(allTrips);
+
+        } else {
+
+            for (Trip trip : allTrips) {
+
+                if (trip.getCountry()
+                        .equalsIgnoreCase(country)) {
+
+                    tripList.add(trip);
+                }
+            }
+        }
+
+        tripAdapter.notifyDataSetChanged();
+    }
+
 }
