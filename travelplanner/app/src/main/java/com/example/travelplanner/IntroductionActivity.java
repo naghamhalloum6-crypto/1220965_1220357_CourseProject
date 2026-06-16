@@ -1,6 +1,5 @@
 package com.example.travelplanner;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -26,9 +25,16 @@ public class IntroductionActivity extends AppCompatActivity {
 
         Button btnConnect = findViewById(R.id.btnConnect);
 
+        // connect to api and load trips
+
         btnConnect.setOnClickListener(v -> {
-            Intent intent = new Intent(IntroductionActivity.this, LoginActivity.class);
-            startActivity(intent);
+
+            TripConnectionAsyncTask connectionAsyncTask =
+                    new TripConnectionAsyncTask(IntroductionActivity.this);
+
+            connectionAsyncTask.execute(
+                    "https://mocki.io/v1/f3153911-eb21-4b36-8ca7-18ea3c77cc1a"
+            );
         });
     }
 }
