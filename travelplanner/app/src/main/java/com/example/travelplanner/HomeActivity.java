@@ -1,6 +1,9 @@
 package com.example.travelplanner;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -18,7 +21,11 @@ public class HomeActivity extends AppCompatActivity {
 
     private RecyclerView recyclerTrips;
 
+    private EditText etSearch;
+
     private ArrayList<Trip> tripList;
+
+    private ArrayList<Trip> allTrips;
 
     private TripAdapter tripAdapter;
 
@@ -52,7 +59,12 @@ public class HomeActivity extends AppCompatActivity {
         recyclerTrips =
                 findViewById(R.id.recyclerTrips);
 
+        etSearch =
+                findViewById(R.id.etSearch);
+
         tripList = new ArrayList<>();
+
+        allTrips = new ArrayList<>();
 
         tripAdapter =
                 new TripAdapter(tripList);
@@ -66,6 +78,43 @@ public class HomeActivity extends AppCompatActivity {
         // load trips from api
 
         loadTripsFromApi();
+
+        // search trips by destination
+
+        etSearch.addTextChangedListener(
+                new TextWatcher() {
+
+                    @Override
+                    public void beforeTextChanged(
+                            CharSequence s,
+                            int start,
+                            int count,
+                            int after
+                    ) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(
+                            CharSequence s,
+                            int start,
+                            int before,
+                            int count
+                    ) {
+
+                        filterTrips(
+                                s.toString()
+                        );
+                    }
+
+                    @Override
+                    public void afterTextChanged(
+                            Editable s
+                    ) {
+
+                    }
+                }
+        );
     }
 
     // get trips from api
@@ -109,8 +158,10 @@ public class HomeActivity extends AppCompatActivity {
             runOnUiThread(() -> {
 
                 tripList.clear();
+                allTrips.clear();
 
                 tripList.addAll(trips);
+                allTrips.addAll(trips);
 
                 tripAdapter.notifyDataSetChanged();
 
@@ -122,5 +173,35 @@ public class HomeActivity extends AppCompatActivity {
             });
 
         }).start();
+    }
+
+    // filter trips by destination
+
+    private void filterTrips(String keyword) {
+
+        tripList.clear();
+
+        // show all trips if search is empty
+
+        if (keyword.isEmpty()) {
+
+            tripList.addAll(allTrips);
+
+        } else {
+
+            for (Trip trip : allTrips) {
+
+                if (trip.getDestination()
+                        .toLowerCase()
+                        .contains(
+                                keyword.toLowerCase()
+                        )) {
+
+                    tripList.add(trip);
+                }
+            }
+        }
+
+        tripAdapter.notifyDataSetChanged();
     }
 }
