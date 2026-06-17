@@ -34,7 +34,13 @@ public class SplashActivity extends AppCompatActivity {
 
         Animation fadeIn = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
 
-        imgLogo.startAnimation(fadeIn);
+        Animation scale =
+                AnimationUtils.loadAnimation(
+                        this,
+                        R.anim.scale
+                );
+
+        imgLogo.startAnimation(scale);
         txtAppName.startAnimation(fadeIn);
         txtSubtitle.startAnimation(fadeIn);
 
