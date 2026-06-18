@@ -14,4 +14,12 @@
         android:textSize="24sp"
         android:textStyle="bold"/>
 
+    <!-- Email button -->
+    <Button
+        android:id="@+id/btnEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Send Email"/>
+
 </LinearLayout>
