@@ -1,5 +1,6 @@
 package com.example.travelplanner;
 
+import com.google.android.material.navigation.NavigationView;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -47,22 +48,101 @@ public class HomeActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        // Setup navigation drawer
+        NavigationView navigationView =
+                findViewById(R.id.navigationView);
 
-            Insets systemBars =
-                    insets.getInsets(
-                            WindowInsetsCompat.Type.systemBars()
+        navigationView.setNavigationItemSelectedListener(item -> {
+
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.nav_home) {
+
+                Toast.makeText(
+                        this,
+                        "Home",
+                        Toast.LENGTH_SHORT
+                ).show();
+
+            } else if (itemId == R.id.nav_trips) {
+
+                Toast.makeText(
+                        this,
+                        "Trips",
+                        Toast.LENGTH_SHORT
+                ).show();
+
+            } else if (itemId == R.id.nav_reservations) {
+
+                Toast.makeText(
+                        this,
+                        "My Reservations",
+                        Toast.LENGTH_SHORT
+                ).show();
+
+            } else if (itemId == R.id.nav_favorites) {
+
+                Toast.makeText(
+                        this,
+                        "Favorites",
+                        Toast.LENGTH_SHORT
+                ).show();
+
+            } else if (itemId == R.id.nav_special) {
+
+                Toast.makeText(
+                        this,
+                        "Special Section",
+                        Toast.LENGTH_SHORT
+                ).show();
+
+            } else if (itemId == R.id.nav_profile) {
+
+                Toast.makeText(
+                        this,
+                        "Profile Management",
+                        Toast.LENGTH_SHORT
+                ).show();
+
+            } else if (itemId == R.id.nav_contact) {
+
+                Toast.makeText(
+                        this,
+                        "Contact Us",
+                        Toast.LENGTH_SHORT
+                ).show();
+
+            } else if (itemId == R.id.nav_logout) {
+
+                Toast.makeText(
+                        this,
+                        "Logout",
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+
+            return true;
+        });
+
+        ViewCompat.setOnApplyWindowInsetsListener(
+                findViewById(R.id.main),
+                (v, insets) -> {
+
+                    Insets systemBars =
+                            insets.getInsets(
+                                    WindowInsetsCompat.Type.systemBars()
+                            );
+
+                    v.setPadding(
+                            systemBars.left,
+                            systemBars.top,
+                            systemBars.right,
+                            systemBars.bottom
                     );
 
-            v.setPadding(
-                    systemBars.left,
-                    systemBars.top,
-                    systemBars.right,
-                    systemBars.bottom
-            );
-
-            return insets;
-        });
+                    return insets;
+                }
+        );
 
         recyclerTrips =
                 findViewById(R.id.recyclerTrips);
@@ -140,8 +220,6 @@ public class HomeActivity extends AppCompatActivity {
 
         loadTripsFromApi();
 
-        // search trips
-
         etSearch.addTextChangedListener(
                 new TextWatcher() {
 
@@ -152,7 +230,6 @@ public class HomeActivity extends AppCompatActivity {
                             int count,
                             int after
                     ) {
-
                     }
 
                     @Override
@@ -162,7 +239,6 @@ public class HomeActivity extends AppCompatActivity {
                             int before,
                             int count
                     ) {
-
                         applyFilters();
                     }
 
@@ -170,7 +246,6 @@ public class HomeActivity extends AppCompatActivity {
                     public void afterTextChanged(
                             Editable s
                     ) {
-
                     }
                 }
         );
