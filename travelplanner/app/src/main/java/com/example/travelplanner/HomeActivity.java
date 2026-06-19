@@ -22,6 +22,9 @@ import android.content.Intent;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.widget.Button;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.core.view.GravityCompat;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -47,6 +50,16 @@ public class HomeActivity extends AppCompatActivity {
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
+        DrawerLayout drawerLayout =
+                findViewById(R.id.main);
+
+        Button btnOpenDrawer =
+                findViewById(R.id.btnOpenDrawer);
+
+// Open navigation drawer
+        btnOpenDrawer.setOnClickListener(v ->
+                drawerLayout.openDrawer(GravityCompat.START)
+        );
 
         // Setup navigation drawer
         NavigationView navigationView =
