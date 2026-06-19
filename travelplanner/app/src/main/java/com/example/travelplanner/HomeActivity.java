@@ -105,12 +105,13 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }else if (itemId == R.id.nav_special) {
 
-                Toast.makeText(
-                        this,
-                        "Special Section",
-                        Toast.LENGTH_SHORT
-                ).show();
+                Intent intent =
+                        new Intent(
+                                HomeActivity.this,
+                                SpecialSectionActivity.class
+                        );
 
+                startActivity(intent);
             } else if (itemId == R.id.nav_profile) {
 
                 Intent intent =
