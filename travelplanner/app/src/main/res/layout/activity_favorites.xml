@@ -6,13 +6,15 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- Favorites screen title -->
+    <!-- Message shown when there are no favorite trips -->
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/txtEmptyFavorites"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Favorites"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:text="No favorite trips yet"
+        android:textSize="18sp" />
 
     <!-- Favorite trips list -->
     <androidx.recyclerview.widget.RecyclerView
