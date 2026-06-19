@@ -14,6 +14,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Travelplanner">
         <activity
+            android:name=".AdminReservationsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminUsersActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminAddTripActivity"
+            android:exported="false" />
+        <activity
             android:name=".AdminHomeActivity"
             android:exported="false" />
         <activity
