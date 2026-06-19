@@ -113,12 +113,13 @@ public class HomeActivity extends AppCompatActivity {
 
             } else if (itemId == R.id.nav_profile) {
 
-                Toast.makeText(
-                        this,
-                        "Profile Management",
-                        Toast.LENGTH_SHORT
-                ).show();
+                Intent intent =
+                        new Intent(
+                                HomeActivity.this,
+                                ProfileActivity.class
+                        );
 
+                startActivity(intent);
             } else if (itemId == R.id.nav_contact) {
 
                 Intent intent =
