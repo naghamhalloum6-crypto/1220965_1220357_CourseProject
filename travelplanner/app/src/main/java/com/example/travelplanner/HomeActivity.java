@@ -119,12 +119,13 @@ public class HomeActivity extends AppCompatActivity {
 
             } else if (itemId == R.id.nav_contact) {
 
-                Toast.makeText(
-                        this,
-                        "Contact Us",
-                        Toast.LENGTH_SHORT
-                ).show();
+                Intent intent =
+                        new Intent(
+                                HomeActivity.this,
+                                ContactUsActivity.class
+                        );
 
+                startActivity(intent);
             } else if (itemId == R.id.nav_logout) {
 
                 Toast.makeText(
