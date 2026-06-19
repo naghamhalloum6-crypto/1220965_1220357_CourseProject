@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "travel_planner.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -45,6 +45,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         "description TEXT," +
                         "image TEXT)"
         );
+        // create reservations table
+        db.execSQL(
+                "CREATE TABLE reservations (" +
+                        "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "trip_name TEXT," +
+                        "quantity INTEGER," +
+                        "reservation_type TEXT," +
+                        "reservation_date TEXT)"
+        );
 
         // insert default admin
 
@@ -72,6 +81,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         db.execSQL("DROP TABLE IF EXISTS users");
         db.execSQL("DROP TABLE IF EXISTS trips");
+        db.execSQL("DROP TABLE IF EXISTS reservations");
 
         onCreate(db);
     }
@@ -212,5 +222,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         );
 
         return result > 0;
+    }
+    // insert reservation into database
+    public boolean insertReservation(
+            String tripName,
+            int quantity,
+            String reservationType,
+            String reservationDate
+    ) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put("trip_name", tripName);
+        values.put("quantity", quantity);
+        values.put("reservation_type", reservationType);
+        values.put("reservation_date", reservationDate);
+
+        long result =
+                db.insert("reservations", null, values);
+
+        return result != -1;
+    }
+
+    // get all reservations
+    public Cursor getAllReservations() {
+
+        SQLiteDatabase db =
+                this.getReadableDatabase();
+
+        return db.rawQuery(
+                "SELECT id, trip_name, quantity, reservation_type, reservation_date FROM reservations",
+                null
+        );
     }
 }

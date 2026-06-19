@@ -1,6 +1,8 @@
 package com.example.travelplanner;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,6 +22,8 @@ public class TripDetailsActivity extends AppCompatActivity {
     private TextView txtRating;
     private TextView txtDescription;
 
+    private Button btnReserveTrip;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,93 +31,57 @@ public class TripDetailsActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_trip_details);
 
-        imgTrip =
-                findViewById(R.id.imgTrip);
+        imgTrip = findViewById(R.id.imgTrip);
 
-        txtDestination =
-                findViewById(R.id.txtDestination);
-
-        txtCountry =
-                findViewById(R.id.txtCountry);
-
-        txtDuration =
-                findViewById(R.id.txtDuration);
-
-        txtPrice =
-                findViewById(R.id.txtPrice);
-
-        txtRating =
-                findViewById(R.id.txtRating);
-
-        txtDescription =
-                findViewById(R.id.txtDescription);
+        txtDestination = findViewById(R.id.txtDestination);
+        txtCountry = findViewById(R.id.txtCountry);
+        txtDuration = findViewById(R.id.txtDuration);
+        txtPrice = findViewById(R.id.txtPrice);
+        txtRating = findViewById(R.id.txtRating);
+        txtDescription = findViewById(R.id.txtDescription);
+        btnReserveTrip = findViewById(R.id.btnReserveTrip);
 
         String destination =
-                getIntent().getStringExtra(
-                        "destination"
-                );
+                getIntent().getStringExtra("destination");
 
         String country =
-                getIntent().getStringExtra(
-                        "country"
-                );
+                getIntent().getStringExtra("country");
 
         int duration =
-                getIntent().getIntExtra(
-                        "duration",
-                        0
-                );
+                getIntent().getIntExtra("duration", 0);
 
         double price =
-                getIntent().getDoubleExtra(
-                        "price",
-                        0
-                );
+                getIntent().getDoubleExtra("price", 0);
 
         double rating =
-                getIntent().getDoubleExtra(
-                        "rating",
-                        0
-                );
+                getIntent().getDoubleExtra("rating", 0);
 
         String description =
-                getIntent().getStringExtra(
-                        "description"
-                );
+                getIntent().getStringExtra("description");
 
         String imageUrl =
-                getIntent().getStringExtra(
-                        "image"
-                );
+                getIntent().getStringExtra("image");
 
-        txtDestination.setText(
-                destination
-        );
-
-        txtCountry.setText(
-                "Country: " + country
-        );
-
-        txtDuration.setText(
-                "Duration: " +
-                        duration +
-                        " days"
-        );
-
-        txtPrice.setText(
-                "Price: $" + price
-        );
-
-        txtRating.setText(
-                "Rating: " + rating
-        );
-
-        txtDescription.setText(
-                description
-        );
+        txtDestination.setText(destination);
+        txtCountry.setText("Country: " + country);
+        txtDuration.setText("Duration: " + duration + " days");
+        txtPrice.setText("Price: $" + price);
+        txtRating.setText("Rating: " + rating);
+        txtDescription.setText(description);
 
         Glide.with(this)
                 .load(imageUrl)
                 .into(imgTrip);
+
+        // Open reservation form for this trip
+        btnReserveTrip.setOnClickListener(v -> {
+            Intent intent =
+                    new Intent(TripDetailsActivity.this,
+                            ReservationFormActivity.class);
+
+            intent.putExtra("trip_name", destination);
+
+            startActivity(intent);
+        });
     }
 }
