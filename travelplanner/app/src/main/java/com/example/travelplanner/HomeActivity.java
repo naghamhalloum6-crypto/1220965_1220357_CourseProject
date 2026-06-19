@@ -87,12 +87,13 @@ public class HomeActivity extends AppCompatActivity {
 
             } else if (itemId == R.id.nav_reservations) {
 
-                Toast.makeText(
-                        this,
-                        "My Reservations",
-                        Toast.LENGTH_SHORT
-                ).show();
+                Intent intent =
+                        new Intent(
+                                HomeActivity.this,
+                                ReservationsActivity.class
+                        );
 
+                startActivity(intent);
             } else if (itemId == R.id.nav_favorites) {
 
                 Intent intent =
