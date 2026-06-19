@@ -130,9 +130,19 @@ public class HomeActivity extends AppCompatActivity {
 
                 Toast.makeText(
                         this,
-                        "Logout",
+                        "Logged out",
                         Toast.LENGTH_SHORT
                 ).show();
+
+                Intent intent =
+                        new Intent(
+                                HomeActivity.this,
+                                LoginActivity.class
+                        );
+
+                startActivity(intent);
+
+                finish();
             }
 
             return true;
