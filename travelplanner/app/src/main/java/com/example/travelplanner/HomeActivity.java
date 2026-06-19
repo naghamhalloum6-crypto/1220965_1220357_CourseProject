@@ -95,13 +95,14 @@ public class HomeActivity extends AppCompatActivity {
 
             } else if (itemId == R.id.nav_favorites) {
 
-                Toast.makeText(
-                        this,
-                        "Favorites",
-                        Toast.LENGTH_SHORT
-                ).show();
+                Intent intent =
+                        new Intent(
+                                HomeActivity.this,
+                                FavoritesActivity.class
+                        );
 
-            } else if (itemId == R.id.nav_special) {
+                startActivity(intent);
+            }else if (itemId == R.id.nav_special) {
 
                 Toast.makeText(
                         this,
