@@ -189,4 +189,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return exists;
     }
+    // Get all normal users
+    public Cursor getAllUsers() {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        return db.rawQuery(
+                "SELECT id, first_name, last_name, email, phone FROM users WHERE category != ?",
+                new String[]{"Admin"}
+        );
+    }
+
+    // Delete user by id
+    public boolean deleteUser(int userId) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        int result = db.delete(
+                "users",
+                "id=?",
+                new String[]{String.valueOf(userId)}
+        );
+
+        return result > 0;
+    }
 }
