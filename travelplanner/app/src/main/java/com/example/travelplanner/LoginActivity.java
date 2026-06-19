@@ -71,8 +71,20 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // encrypt password before checking login
+        // Check default admin account
+        if (email.equals("admin@admin.com")
+                && password.equals("Admin123!")) {
 
+            Intent intent =
+                    new Intent(LoginActivity.this,
+                            AdminHomeActivity.class);
+
+            startActivity(intent);
+            finish();
+            return;
+        }
+
+        // encrypt password before checking login
         String encryptedPassword =
                 PasswordHelper.hashPassword(password);
 

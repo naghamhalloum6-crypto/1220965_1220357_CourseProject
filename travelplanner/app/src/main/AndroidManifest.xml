@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Travelplanner">
         <activity
+            android:name=".AdminHomeActivity"
+            android:exported="false" />
+        <activity
             android:name=".SpecialSectionActivity"
             android:exported="false" />
         <activity
