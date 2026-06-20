@@ -32,8 +32,12 @@ public class SplashActivity extends AppCompatActivity {
         TextView txtAppName = findViewById(R.id.txtAppName);
         TextView txtSubtitle = findViewById(R.id.txtSubtitle);
 
-        Animation fadeIn = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
-
+// Load fade animation from res/anim
+        Animation fadeIn =
+                AnimationUtils.loadAnimation(
+                        this,
+                        R.anim.fade_in
+                );
         Animation scale =
                 AnimationUtils.loadAnimation(
                         this,
