@@ -1,45 +1,100 @@
 package com.example.travelplanner;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    private static final int PICK_IMAGE_REQUEST = 1;
+
+    private ImageView imgProfile;
+
     private EditText etFirstName;
     private EditText etLastName;
     private EditText etPhone;
     private EditText etNewPassword;
 
+    private Button btnChooseImage;
     private Button btnUpdateProfile;
+
+    private Uri selectedImageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        etFirstName =
-                findViewById(R.id.etFirstName);
+        imgProfile = findViewById(R.id.imgProfile);
 
-        etLastName =
-                findViewById(R.id.etLastName);
+        etFirstName = findViewById(R.id.etFirstName);
+        etLastName = findViewById(R.id.etLastName);
+        etPhone = findViewById(R.id.etPhone);
+        etNewPassword = findViewById(R.id.etNewPassword);
 
-        etPhone =
-                findViewById(R.id.etPhone);
+        btnChooseImage = findViewById(R.id.btnChooseImage);
+        btnUpdateProfile = findViewById(R.id.btnUpdateProfile);
 
-        etNewPassword =
-                findViewById(R.id.etNewPassword);
-
-        btnUpdateProfile =
-                findViewById(R.id.btnUpdateProfile);
+        // Open gallery to choose profile picture
+        btnChooseImage.setOnClickListener(v ->
+                openGallery()
+        );
 
         // Update profile information
         btnUpdateProfile.setOnClickListener(v ->
                 updateProfile()
         );
+    }
+
+    private void openGallery() {
+
+        Intent intent =
+                new Intent(Intent.ACTION_PICK);
+
+        intent.setType("image/*");
+
+        startActivityForResult(
+                intent,
+                PICK_IMAGE_REQUEST
+        );
+    }
+
+    @Override
+    protected void onActivityResult(
+            int requestCode,
+            int resultCode,
+            Intent data
+    ) {
+        super.onActivityResult(
+                requestCode,
+                resultCode,
+                data
+        );
+
+        if (requestCode == PICK_IMAGE_REQUEST
+                && resultCode == RESULT_OK
+                && data != null
+                && data.getData() != null) {
+
+            selectedImageUri =
+                    data.getData();
+
+            imgProfile.setImageURI(
+                    selectedImageUri
+            );
+
+            Toast.makeText(
+                    this,
+                    "Profile picture selected",
+                    Toast.LENGTH_SHORT
+            ).show();
+        }
     }
 
     private void updateProfile() {
@@ -94,18 +149,37 @@ public class ProfileActivity extends AppCompatActivity {
             return;
         }
 
-        // Validate password length
-        if (!password.isEmpty()
-                && password.length() < 6) {
+        // Validate password if user enters a new one
+        if (!password.isEmpty()) {
 
-            etNewPassword.setError(
-                    "Password must be at least 6 characters"
-            );
+            if (password.length() < 6) {
 
-            return;
+                etNewPassword.setError(
+                        "Password must be at least 6 characters"
+                );
+
+                return;
+            }
+
+            if (!password.matches(".*[A-Za-z].*")) {
+
+                etNewPassword.setError(
+                        "Password must contain a letter"
+                );
+
+                return;
+            }
+
+            if (!password.matches(".*[0-9].*")) {
+
+                etNewPassword.setError(
+                        "Password must contain a number"
+                );
+
+                return;
+            }
         }
 
-        // Show success message
         Toast.makeText(
                 this,
                 "Profile updated successfully",
