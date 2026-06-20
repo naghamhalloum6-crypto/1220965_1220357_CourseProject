@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class AdminHomeActivity extends AppCompatActivity {
 
     private Button btnAddTrip;
+    private Button btnManageTrips;
     private Button btnViewUsers;
     private Button btnViewReservations;
     private Button btnLogout;
@@ -19,6 +20,7 @@ public class AdminHomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_admin_home);
 
         btnAddTrip = findViewById(R.id.btnAddTrip);
+        btnManageTrips = findViewById(R.id.btnManageTrips);
         btnViewUsers = findViewById(R.id.btnViewUsers);
         btnViewReservations = findViewById(R.id.btnViewReservations);
         btnLogout = findViewById(R.id.btnLogout);
@@ -26,6 +28,11 @@ public class AdminHomeActivity extends AppCompatActivity {
         // Open admin pages
         btnAddTrip.setOnClickListener(v -> {
             Intent intent = new Intent(AdminHomeActivity.this, AdminAddTripActivity.class);
+            startActivity(intent);
+        });
+
+        btnManageTrips.setOnClickListener(v -> {
+            Intent intent = new Intent(AdminHomeActivity.this, AdminManageTripsActivity.class);
             startActivity(intent);
         });
 

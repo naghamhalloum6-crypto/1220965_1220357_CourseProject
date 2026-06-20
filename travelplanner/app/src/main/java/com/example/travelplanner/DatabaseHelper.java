@@ -257,4 +257,62 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 null
         );
     }
+    // get all trips
+    public Cursor getAllTrips() {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        return db.rawQuery(
+                "SELECT id, destination, country, duration_days, price, rating, description, image FROM trips",
+                null
+        );
+    }
+
+    // update trip data
+    public boolean updateTrip(
+            int id,
+            String destination,
+            String country,
+            int durationDays,
+            double price,
+            double rating,
+            String description,
+            String image
+    ) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put("destination", destination);
+        values.put("country", country);
+        values.put("duration_days", durationDays);
+        values.put("price", price);
+        values.put("rating", rating);
+        values.put("description", description);
+        values.put("image", image);
+
+        int result = db.update(
+                "trips",
+                values,
+                "id=?",
+                new String[]{String.valueOf(id)}
+        );
+
+        return result > 0;
+    }
+
+    // delete trip by id
+    public boolean deleteTrip(int tripId) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        int result = db.delete(
+                "trips",
+                "id=?",
+                new String[]{String.valueOf(tripId)}
+        );
+
+        return result > 0;
+    }
 }
