@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Travelplanner">
         <activity
+            android:name=".AdminEditTripActivity"
+            android:exported="false" />
+        <activity
             android:name=".AdminManageTripsActivity"
             android:exported="false" />
         <activity
