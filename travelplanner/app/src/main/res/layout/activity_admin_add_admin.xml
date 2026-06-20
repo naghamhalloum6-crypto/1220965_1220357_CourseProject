@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -9,44 +10,43 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Admin Dashboard"
+        android:text="Add New Admin"
         android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="20dp"/>
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/etAdminName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:hint="Admin Name"/>
+
+    <EditText
+        android:id="@+id/etAdminEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Admin Email"
+        android:inputType="textEmailAddress"/>
+
+    <EditText
+        android:id="@+id/etAdminPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Phone"
+        android:inputType="phone"/>
+
+    <EditText
+        android:id="@+id/etAdminPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword"/>
 
     <Button
-        android:id="@+id/btnAddTrip"
+        android:id="@+id/btnCreateAdmin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add Trip"/>
-    <Button
-        android:id="@+id/btnManageTrips"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Manage Trips"/>
-    <Button
-        android:id="@+id/btnAddAdmin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Add Admin"/>
-
-
-    <Button
-        android:id="@+id/btnViewUsers"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="View Users"/>
-
-    <Button
-        android:id="@+id/btnViewReservations"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="View Reservations"/>
-
-    <Button
-        android:id="@+id/btnLogout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Logout"/>
+        android:layout_marginTop="20dp"
+        android:text="Create Admin"/>
 
 </LinearLayout>

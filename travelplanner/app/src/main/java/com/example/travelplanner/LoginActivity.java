@@ -121,8 +121,28 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.LENGTH_SHORT
         ).show();
 
-        Intent intent =
-                new Intent(LoginActivity.this, HomeActivity.class);
+// Open admin dashboard for admin users
+        String category =
+                databaseHelper.getUserCategory(email);
+
+        Intent intent;
+
+        if (category.equals("Admin")) {
+
+            intent =
+                    new Intent(
+                            LoginActivity.this,
+                            AdminHomeActivity.class
+                    );
+
+        } else {
+
+            intent =
+                    new Intent(
+                            LoginActivity.this,
+                            HomeActivity.class
+                    );
+        }
 
         startActivity(intent);
         finish();

@@ -315,4 +315,49 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return result > 0;
     }
+    // Insert admin user into database
+    public boolean insertAdmin(
+            String name,
+            String email,
+            String phone,
+            String password
+    ) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put("first_name", name);
+        values.put("last_name", "");
+        values.put("email", email);
+        values.put("phone", phone);
+        values.put("gender", "Male");
+        values.put("category", "Admin");
+        values.put("password", password);
+
+        long result =
+                db.insert("users", null, values);
+
+        return result != -1;
+    }
+    // Get user category by email
+    public String getUserCategory(String email) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT category FROM users WHERE email=?",
+                new String[]{email}
+        );
+
+        String category = "";
+
+        if (cursor.moveToFirst()) {
+            category = cursor.getString(0);
+        }
+
+        cursor.close();
+
+        return category;
+    }
 }
