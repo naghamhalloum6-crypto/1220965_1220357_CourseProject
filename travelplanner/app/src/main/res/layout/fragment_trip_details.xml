@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Trip Image -->
+        <ImageView
+            android:id="@+id/imgTrip"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:scaleType="centerCrop" />
+
+        <!-- Destination -->
+        <TextView
+            android:id="@+id/txtDestination"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Destination"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp" />
+
+        <!-- Country -->
+        <TextView
+            android:id="@+id/txtCountry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Country"
+            android:textSize="18sp"
+            android:layout_marginTop="8dp" />
+
+        <!-- Duration -->
+        <TextView
+            android:id="@+id/txtDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Duration"
+            android:layout_marginTop="8dp" />
+
+        <!-- Price -->
+        <TextView
+            android:id="@+id/txtPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Price"
+            android:layout_marginTop="8dp" />
+
+        <!-- Rating -->
+        <TextView
+            android:id="@+id/txtRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rating"
+            android:layout_marginTop="8dp" />
+
+        <!-- Description -->
+        <TextView
+            android:id="@+id/txtDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:layout_marginTop="12dp" />
+
+        <!-- Reserve Button -->
+        <Button
+            android:id="@+id/btnReserve"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Reserve Now"
+            android:layout_marginTop="20dp" />
+
+    </LinearLayout>
+
+</ScrollView>

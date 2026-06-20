@@ -1,87 +1,31 @@
 package com.example.travelplanner;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
-
 public class TripDetailsActivity extends AppCompatActivity {
-
-    private ImageView imgTrip;
-
-    private TextView txtDestination;
-    private TextView txtCountry;
-    private TextView txtDuration;
-    private TextView txtPrice;
-    private TextView txtRating;
-    private TextView txtDescription;
-
-    private Button btnReserveTrip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_trip_details);
 
-        imgTrip = findViewById(R.id.imgTrip);
+        if (savedInstanceState == null) {
 
-        txtDestination = findViewById(R.id.txtDestination);
-        txtCountry = findViewById(R.id.txtCountry);
-        txtDuration = findViewById(R.id.txtDuration);
-        txtPrice = findViewById(R.id.txtPrice);
-        txtRating = findViewById(R.id.txtRating);
-        txtDescription = findViewById(R.id.txtDescription);
-        btnReserveTrip = findViewById(R.id.btnReserveTrip);
+            // Display trip details inside fragment
+            TripDetailsFragment fragment =
+                    new TripDetailsFragment();
 
-        String destination =
-                getIntent().getStringExtra("destination");
+            fragment.setArguments(getIntent().getExtras());
 
-        String country =
-                getIntent().getStringExtra("country");
-
-        int duration =
-                getIntent().getIntExtra("duration", 0);
-
-        double price =
-                getIntent().getDoubleExtra("price", 0);
-
-        double rating =
-                getIntent().getDoubleExtra("rating", 0);
-
-        String description =
-                getIntent().getStringExtra("description");
-
-        String imageUrl =
-                getIntent().getStringExtra("image");
-
-        txtDestination.setText(destination);
-        txtCountry.setText("Country: " + country);
-        txtDuration.setText("Duration: " + duration + " days");
-        txtPrice.setText("Price: $" + price);
-        txtRating.setText("Rating: " + rating);
-        txtDescription.setText(description);
-
-        Glide.with(this)
-                .load(imageUrl)
-                .into(imgTrip);
-
-        // Open reservation form for this trip
-        btnReserveTrip.setOnClickListener(v -> {
-            Intent intent =
-                    new Intent(TripDetailsActivity.this,
-                            ReservationFormActivity.class);
-
-            intent.putExtra("trip_name", destination);
-
-            startActivity(intent);
-        });
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(
+                            R.id.fragmentContainer,
+                            fragment
+                    )
+                    .commit();
+        }
     }
 }
