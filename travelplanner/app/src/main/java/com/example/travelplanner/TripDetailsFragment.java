@@ -81,9 +81,18 @@ public class TripDetailsFragment extends Fragment {
         txtRating.setText("Rating: " + rating);
         txtDescription.setText(description);
 
-        Glide.with(this)
-                .load(imageUrl)
-                .into(imgTrip);
+        if (imageUrl != null && imageUrl.startsWith("http")) {
+
+            Glide.with(this)
+                    .load(imageUrl)
+                    .placeholder(android.R.drawable.ic_menu_gallery)
+                    .error(android.R.drawable.ic_menu_report_image)
+                    .into(imgTrip);
+
+        } else {
+
+            imgTrip.setImageResource(android.R.drawable.ic_menu_gallery);
+        }
 
         // Open reservation form for this trip
         btnReserve.setOnClickListener(v -> {

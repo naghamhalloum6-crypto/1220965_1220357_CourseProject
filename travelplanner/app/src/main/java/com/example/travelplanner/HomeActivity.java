@@ -1,12 +1,16 @@
 package com.example.travelplanner;
 
 import com.google.android.material.navigation.NavigationView;
+
+import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -14,31 +18,25 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
+import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.content.Intent;
 
 import java.util.ArrayList;
 import java.util.List;
-import android.widget.Button;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.core.view.GravityCompat;
 
 public class HomeActivity extends AppCompatActivity {
 
     private RecyclerView recyclerTrips;
-
     private EditText etSearch;
-
     private Spinner spCountryFilter;
     private android.widget.TextView txtEmptyResult;
 
     private ArrayList<Trip> tripList;
-
     private ArrayList<Trip> allTrips;
-
     private TripAdapter tripAdapter;
 
     private static final String API_URL =
@@ -50,18 +48,17 @@ public class HomeActivity extends AppCompatActivity {
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
+
         DrawerLayout drawerLayout =
                 findViewById(R.id.main);
 
         Button btnOpenDrawer =
                 findViewById(R.id.btnOpenDrawer);
 
-// Open navigation drawer
         btnOpenDrawer.setOnClickListener(v ->
                 drawerLayout.openDrawer(GravityCompat.START)
         );
 
-        // Setup navigation drawer
         NavigationView navigationView =
                 findViewById(R.id.navigationView);
 
@@ -71,65 +68,63 @@ public class HomeActivity extends AppCompatActivity {
 
             if (itemId == R.id.nav_home) {
 
-                Toast.makeText(
-                        this,
-                        "Home",
-                        Toast.LENGTH_SHORT
-                ).show();
+                drawerLayout.closeDrawer(GravityCompat.START);
 
             } else if (itemId == R.id.nav_trips) {
 
+                drawerLayout.closeDrawer(GravityCompat.START);
+
                 Toast.makeText(
                         this,
-                        "Trips",
+                        "Trips list",
                         Toast.LENGTH_SHORT
                 ).show();
 
             } else if (itemId == R.id.nav_reservations) {
 
-                Intent intent =
+                startActivity(
                         new Intent(
                                 HomeActivity.this,
                                 ReservationsActivity.class
-                        );
+                        )
+                );
 
-                startActivity(intent);
             } else if (itemId == R.id.nav_favorites) {
 
-                Intent intent =
+                startActivity(
                         new Intent(
                                 HomeActivity.this,
                                 FavoritesActivity.class
-                        );
+                        )
+                );
 
-                startActivity(intent);
-            }else if (itemId == R.id.nav_special) {
+            } else if (itemId == R.id.nav_special) {
 
-                Intent intent =
+                startActivity(
                         new Intent(
                                 HomeActivity.this,
                                 SpecialSectionActivity.class
-                        );
+                        )
+                );
 
-                startActivity(intent);
             } else if (itemId == R.id.nav_profile) {
 
-                Intent intent =
+                startActivity(
                         new Intent(
                                 HomeActivity.this,
                                 ProfileActivity.class
-                        );
+                        )
+                );
 
-                startActivity(intent);
             } else if (itemId == R.id.nav_contact) {
 
-                Intent intent =
+                startActivity(
                         new Intent(
                                 HomeActivity.this,
                                 ContactUsActivity.class
-                        );
+                        )
+                );
 
-                startActivity(intent);
             } else if (itemId == R.id.nav_logout) {
 
                 Toast.makeText(
@@ -138,13 +133,12 @@ public class HomeActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT
                 ).show();
 
-                Intent intent =
+                startActivity(
                         new Intent(
                                 HomeActivity.this,
                                 LoginActivity.class
-                        );
-
-                startActivity(intent);
+                        )
+                );
 
                 finish();
             }
@@ -184,9 +178,11 @@ public class HomeActivity extends AppCompatActivity {
         txtEmptyResult =
                 findViewById(R.id.txtEmptyResult);
 
-        tripList = new ArrayList<>();
+        tripList =
+                new ArrayList<>();
 
-        allTrips = new ArrayList<>();
+        allTrips =
+                new ArrayList<>();
 
         tripAdapter =
                 new TripAdapter(
@@ -279,8 +275,6 @@ public class HomeActivity extends AppCompatActivity {
         );
     }
 
-    // load trips from api
-
     private void loadTripsFromApi() {
 
         new Thread(() -> {
@@ -319,12 +313,6 @@ public class HomeActivity extends AppCompatActivity {
 
             runOnUiThread(() -> {
 
-                tripList.clear();
-                allTrips.clear();
-
-                tripList.addAll(trips);
-                allTrips.addAll(trips);
-
                 DatabaseHelper databaseHelper =
                         new DatabaseHelper(
                                 HomeActivity.this
@@ -349,7 +337,7 @@ public class HomeActivity extends AppCompatActivity {
                     }
                 }
 
-                applyFilters();
+                loadTripsFromDatabase();
 
                 Toast.makeText(
                         HomeActivity.this,
@@ -361,7 +349,44 @@ public class HomeActivity extends AppCompatActivity {
         }).start();
     }
 
-    // setup country filter
+    private void loadTripsFromDatabase() {
+
+        allTrips.clear();
+        tripList.clear();
+
+        DatabaseHelper databaseHelper =
+                new DatabaseHelper(this);
+
+        Cursor cursor =
+                databaseHelper.getAllTrips();
+
+        if (cursor != null && cursor.moveToFirst()) {
+
+            do {
+
+                Trip trip =
+                        new Trip(
+                                cursor.getInt(0),
+                                cursor.getString(1),
+                                cursor.getString(2),
+                                cursor.getInt(3),
+                                cursor.getDouble(4),
+                                cursor.getDouble(5),
+                                cursor.getString(6),
+                                cursor.getString(7)
+                        );
+
+                allTrips.add(trip);
+
+            } while (cursor.moveToNext());
+
+            cursor.close();
+        }
+
+        tripList.addAll(allTrips);
+
+        applyFilters();
+    }
 
     private void setupCountryFilter() {
 
@@ -402,7 +427,6 @@ public class HomeActivity extends AppCompatActivity {
                             int position,
                             long id
                     ) {
-
                         applyFilters();
                     }
 
@@ -410,13 +434,10 @@ public class HomeActivity extends AppCompatActivity {
                     public void onNothingSelected(
                             AdapterView<?> parent
                     ) {
-
                     }
                 }
         );
     }
-
-    // combine search and filter
 
     private void applyFilters() {
 
@@ -457,15 +478,11 @@ public class HomeActivity extends AppCompatActivity {
 
         if (tripList.isEmpty()) {
 
-            txtEmptyResult.setVisibility(
-                    View.VISIBLE
-            );
+            txtEmptyResult.setVisibility(View.VISIBLE);
 
         } else {
 
-            txtEmptyResult.setVisibility(
-                    View.GONE
-            );
+            txtEmptyResult.setVisibility(View.GONE);
         }
     }
 }
