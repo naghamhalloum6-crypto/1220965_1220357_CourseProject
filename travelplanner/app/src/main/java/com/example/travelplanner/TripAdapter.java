@@ -1,9 +1,11 @@
 package com.example.travelplanner;
 
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,24 +14,17 @@ import java.util.ArrayList;
 
 public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder> {
 
-    // click listener
-
     public interface OnTripClickListener {
-
         void onTripClick(Trip trip);
     }
 
-    // list of trips
-
     private ArrayList<Trip> tripList;
-
     private OnTripClickListener listener;
 
     public TripAdapter(
             ArrayList<Trip> tripList,
             OnTripClickListener listener
     ) {
-
         this.tripList = tripList;
         this.listener = listener;
     }
@@ -40,7 +35,6 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
             @NonNull ViewGroup parent,
             int viewType
     ) {
-
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(
                         R.layout.item_trip,
@@ -56,43 +50,55 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
             @NonNull TripViewHolder holder,
             int position
     ) {
-
         Trip trip = tripList.get(position);
 
-        holder.txtDestination.setText(
-                trip.getDestination()
+        holder.txtDestination.setText(trip.getDestination());
+        holder.txtCountry.setText("Country: " + trip.getCountry());
+        holder.txtDuration.setText("Duration: " + trip.getDurationDays() + " days");
+        holder.txtPrice.setText("Price: $" + trip.getPrice());
+        holder.txtRating.setText("Rating: " + trip.getRating());
+
+        // Open trip details
+        holder.itemView.setOnClickListener(v ->
+                listener.onTripClick(trip)
         );
 
-        holder.txtCountry.setText(
-                "Country: " + trip.getCountry()
-        );
+        // Add trip to favorites
+        holder.btnFavorite.setOnClickListener(v -> {
 
-        holder.txtDuration.setText(
-                "Duration: " +
-                        trip.getDurationDays() +
-                        " days"
-        );
+            DatabaseHelper databaseHelper =
+                    new DatabaseHelper(holder.itemView.getContext());
 
-        holder.txtPrice.setText(
-                "Price: $" +
-                        trip.getPrice()
-        );
+            boolean added =
+                    databaseHelper.insertFavorite(
+                            trip.getId(),
+                            trip.getDestination(),
+                            trip.getCountry(),
+                            trip.getDurationDays(),
+                            trip.getPrice(),
+                            trip.getRating(),
+                            trip.getDescription(),
+                            trip.getImage()
+                    );
 
-        holder.txtRating.setText(
-                "Rating: " +
-                        trip.getRating()
-        );
-
-        holder.itemView.setOnClickListener(v -> {
-
-            listener.onTripClick(trip);
-
+            if (added) {
+                Toast.makeText(
+                        holder.itemView.getContext(),
+                        "Added to favorites",
+                        Toast.LENGTH_SHORT
+                ).show();
+            } else {
+                Toast.makeText(
+                        holder.itemView.getContext(),
+                        "Already in favorites",
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
         });
     }
 
     @Override
     public int getItemCount() {
-
         if (tripList == null) {
             return 0;
         }
@@ -100,44 +106,24 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
         return tripList.size();
     }
 
-    public static class TripViewHolder
-            extends RecyclerView.ViewHolder {
+    public static class TripViewHolder extends RecyclerView.ViewHolder {
 
         TextView txtDestination;
         TextView txtCountry;
         TextView txtDuration;
         TextView txtPrice;
         TextView txtRating;
+        Button btnFavorite;
 
-        public TripViewHolder(
-                @NonNull View itemView
-        ) {
+        public TripViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            txtDestination =
-                    itemView.findViewById(
-                            R.id.txtDestination
-                    );
-
-            txtCountry =
-                    itemView.findViewById(
-                            R.id.txtCountry
-                    );
-
-            txtDuration =
-                    itemView.findViewById(
-                            R.id.txtDuration
-                    );
-
-            txtPrice =
-                    itemView.findViewById(
-                            R.id.txtPrice
-                    );
-
-            txtRating =
-                    itemView.findViewById(
-                            R.id.txtRating
-                    );
+            txtDestination = itemView.findViewById(R.id.txtDestination);
+            txtCountry = itemView.findViewById(R.id.txtCountry);
+            txtDuration = itemView.findViewById(R.id.txtDuration);
+            txtPrice = itemView.findViewById(R.id.txtPrice);
+            txtRating = itemView.findViewById(R.id.txtRating);
+            btnFavorite = itemView.findViewById(R.id.btnFavorite);
         }
     }
 }

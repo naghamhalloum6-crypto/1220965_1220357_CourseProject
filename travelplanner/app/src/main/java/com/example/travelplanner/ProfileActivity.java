@@ -54,6 +54,12 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void openGallery() {
 
+        Toast.makeText(
+                this,
+                "Select a profile picture",
+                Toast.LENGTH_SHORT
+        ).show();
+
         Intent intent =
                 new Intent(Intent.ACTION_PICK);
 
@@ -92,6 +98,14 @@ public class ProfileActivity extends AppCompatActivity {
             Toast.makeText(
                     this,
                     "Profile picture selected",
+                    Toast.LENGTH_SHORT
+            ).show();
+
+        } else if (requestCode == PICK_IMAGE_REQUEST) {
+
+            Toast.makeText(
+                    this,
+                    "No profile picture selected",
                     Toast.LENGTH_SHORT
             ).show();
         }

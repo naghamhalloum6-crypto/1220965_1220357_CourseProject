@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "travel_planner.db";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -17,8 +17,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
-        // create users table
 
         db.execSQL(
                 "CREATE TABLE users (" +
@@ -32,8 +30,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         "password TEXT)"
         );
 
-        // create trips table
-
         db.execSQL(
                 "CREATE TABLE trips (" +
                         "id INTEGER PRIMARY KEY," +
@@ -45,7 +41,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         "description TEXT," +
                         "image TEXT)"
         );
-        // create reservations table
+
         db.execSQL(
                 "CREATE TABLE reservations (" +
                         "id INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -55,7 +51,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         "reservation_date TEXT)"
         );
 
-        // insert default admin
+        db.execSQL(
+                "CREATE TABLE favorites (" +
+                        "id INTEGER PRIMARY KEY," +
+                        "destination TEXT," +
+                        "country TEXT," +
+                        "duration_days INTEGER," +
+                        "price REAL," +
+                        "rating REAL," +
+                        "description TEXT," +
+                        "image TEXT)"
+        );
 
         ContentValues admin = new ContentValues();
 
@@ -65,13 +71,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         admin.put("phone", "0000000000");
         admin.put("gender", "Male");
         admin.put("category", "Admin");
-
-        // save admin password as hash
-
-        admin.put(
-                "password",
-                PasswordHelper.hashPassword("Admin123!")
-        );
+        admin.put("password", PasswordHelper.hashPassword("Admin123!"));
 
         db.insert("users", null, admin);
     }
@@ -82,11 +82,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS users");
         db.execSQL("DROP TABLE IF EXISTS trips");
         db.execSQL("DROP TABLE IF EXISTS reservations");
+        db.execSQL("DROP TABLE IF EXISTS favorites");
 
         onCreate(db);
     }
-
-    // insert new user
 
     public boolean insertUser(
             String firstName,
@@ -115,8 +114,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    // check login data
-
     public boolean checkUser(String email, String password) {
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -133,8 +130,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return exists;
     }
 
-    // check if email exists
-
     public boolean emailExists(String email) {
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -150,8 +145,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return exists;
     }
-
-    // insert trip into database
 
     public boolean insertTrip(
             int id,
@@ -182,8 +175,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    // check if trip already exists
-
     public boolean tripExists(int tripId) {
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -199,7 +190,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return exists;
     }
-    // Get all normal users
+
     public Cursor getAllUsers() {
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -210,7 +201,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         );
     }
 
-    // Delete user by id
     public boolean deleteUser(int userId) {
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -223,7 +213,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return result > 0;
     }
-    // insert reservation into database
+
     public boolean insertReservation(
             String tripName,
             int quantity,
@@ -240,24 +230,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put("reservation_type", reservationType);
         values.put("reservation_date", reservationDate);
 
-        long result =
-                db.insert("reservations", null, values);
+        long result = db.insert("reservations", null, values);
 
         return result != -1;
     }
 
-    // get all reservations
     public Cursor getAllReservations() {
 
-        SQLiteDatabase db =
-                this.getReadableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
 
         return db.rawQuery(
                 "SELECT id, trip_name, quantity, reservation_type, reservation_date FROM reservations",
                 null
         );
     }
-    // get all trips
+
     public Cursor getAllTrips() {
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -268,7 +255,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         );
     }
 
-    // update trip data
     public boolean updateTrip(
             int id,
             String destination,
@@ -302,7 +288,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result > 0;
     }
 
-    // delete trip by id
     public boolean deleteTrip(int tripId) {
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -315,7 +300,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return result > 0;
     }
-    // Insert admin user into database
+
     public boolean insertAdmin(
             String name,
             String email,
@@ -335,12 +320,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put("category", "Admin");
         values.put("password", password);
 
-        long result =
-                db.insert("users", null, values);
+        long result = db.insert("users", null, values);
 
         return result != -1;
     }
-    // Get user category by email
+
     public String getUserCategory(String email) {
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -359,5 +343,57 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
 
         return category;
+    }
+
+    public boolean insertFavorite(
+            int id,
+            String destination,
+            String country,
+            int durationDays,
+            double price,
+            double rating,
+            String description,
+            String image
+    ) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put("id", id);
+        values.put("destination", destination);
+        values.put("country", country);
+        values.put("duration_days", durationDays);
+        values.put("price", price);
+        values.put("rating", rating);
+        values.put("description", description);
+        values.put("image", image);
+
+        long result = db.insert("favorites", null, values);
+
+        return result != -1;
+    }
+
+    public Cursor getAllFavorites() {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        return db.rawQuery(
+                "SELECT id, destination, country, duration_days, price, rating, description, image FROM favorites",
+                null
+        );
+    }
+
+    public boolean deleteFavorite(int tripId) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        int result = db.delete(
+                "favorites",
+                "id=?",
+                new String[]{String.valueOf(tripId)}
+        );
+
+        return result > 0;
     }
 }
