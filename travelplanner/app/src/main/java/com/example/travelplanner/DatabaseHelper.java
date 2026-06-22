@@ -292,6 +292,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
+        db.delete(
+                "favorites",
+                "id=?",
+                new String[]{String.valueOf(tripId)}
+        );
+
         int result = db.delete(
                 "trips",
                 "id=?",
@@ -393,6 +399,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "id=?",
                 new String[]{String.valueOf(tripId)}
         );
+
+        return result > 0;
+    }
+    public boolean updateUserProfile(
+            String email,
+            String firstName,
+            String lastName,
+            String phone,
+            String password
+    ) {
+        SQLiteDatabase db =
+                this.getWritableDatabase();
+
+        ContentValues values =
+                new ContentValues();
+
+        values.put("first_name", firstName);
+        values.put("last_name", lastName);
+        values.put("phone", phone);
+
+        if (password != null && !password.isEmpty()) {
+            values.put("password", password);
+        }
+
+        int result =
+                db.update(
+                        "users",
+                        values,
+                        "email=?",
+                        new String[]{email}
+                );
 
         return result > 0;
     }

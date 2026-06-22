@@ -22,6 +22,7 @@ public class LoginActivity extends AppCompatActivity {
     private CheckBox cbRememberMe;
 
     private DatabaseHelper databaseHelper;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         cbRememberMe = findViewById(R.id.cbRememberMe);
 
         databaseHelper = new DatabaseHelper(this);
+        preferences = getSharedPreferences("travel_app", MODE_PRIVATE);
 
         Button btnLogin = findViewById(R.id.btnLogin);
         Button btnSignUp = findViewById(R.id.btnSignUp);
@@ -71,20 +73,18 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // Check default admin account
-        if (email.equals("admin@admin.com")
-                && password.equals("Admin123!")) {
+        if (email.equals("admin@admin.com") && password.equals("Admin123!")) {
+
+            saveLoginInfo(email);
 
             Intent intent =
-                    new Intent(LoginActivity.this,
-                            AdminHomeActivity.class);
+                    new Intent(LoginActivity.this, AdminHomeActivity.class);
 
             startActivity(intent);
             finish();
             return;
         }
 
-        // encrypt password before checking login
         String encryptedPassword =
                 PasswordHelper.hashPassword(password);
 
@@ -95,25 +95,15 @@ public class LoginActivity extends AppCompatActivity {
                 );
 
         if (!userExists) {
-
             Toast.makeText(
                     this,
                     "invalid email or password",
                     Toast.LENGTH_SHORT
             ).show();
-
             return;
         }
 
-        if (cbRememberMe.isChecked()) {
-
-            SharedPreferences preferences =
-                    getSharedPreferences("travel_app", MODE_PRIVATE);
-
-            preferences.edit()
-                    .putString("saved_email", email)
-                    .apply();
-        }
+        saveLoginInfo(email);
 
         Toast.makeText(
                 this,
@@ -121,22 +111,18 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.LENGTH_SHORT
         ).show();
 
-// Open admin dashboard for admin users
         String category =
                 databaseHelper.getUserCategory(email);
 
         Intent intent;
 
         if (category.equals("Admin")) {
-
             intent =
                     new Intent(
                             LoginActivity.this,
                             AdminHomeActivity.class
                     );
-
         } else {
-
             intent =
                     new Intent(
                             LoginActivity.this,
@@ -148,14 +134,31 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    private void loadSavedEmail() {
+    private void saveLoginInfo(String email) {
 
-        SharedPreferences preferences =
-                getSharedPreferences("travel_app", MODE_PRIVATE);
+        SharedPreferences.Editor editor =
+                preferences.edit();
+
+        editor.putString("current_user_email", email);
+
+        if (cbRememberMe.isChecked()) {
+            editor.putString("saved_email", email);
+        } else {
+            editor.remove("saved_email");
+        }
+
+        editor.apply();
+    }
+
+    private void loadSavedEmail() {
 
         String savedEmail =
                 preferences.getString("saved_email", "");
 
         etEmail.setText(savedEmail);
+
+        if (!savedEmail.isEmpty()) {
+            cbRememberMe.setChecked(true);
+        }
     }
 }

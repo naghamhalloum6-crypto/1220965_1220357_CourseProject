@@ -1,6 +1,7 @@
 package com.example.travelplanner;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
@@ -25,11 +26,28 @@ public class ProfileActivity extends AppCompatActivity {
     private Button btnUpdateProfile;
 
     private Uri selectedImageUri;
+    private DatabaseHelper databaseHelper;
+    private String currentUserEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        databaseHelper = new DatabaseHelper(this);
+
+        SharedPreferences preferences =
+                getSharedPreferences("travel_app", MODE_PRIVATE);
+
+        currentUserEmail =
+                preferences.getString("current_user_email", "");
+
+        String emailFromIntent =
+                getIntent().getStringExtra("user_email");
+
+        if (emailFromIntent != null && !emailFromIntent.isEmpty()) {
+            currentUserEmail = emailFromIntent;
+        }
 
         imgProfile = findViewById(R.id.imgProfile);
         imgProfile.setImageResource(R.mipmap.ic_launcher);
@@ -42,12 +60,10 @@ public class ProfileActivity extends AppCompatActivity {
         btnChooseImage = findViewById(R.id.btnChooseImage);
         btnUpdateProfile = findViewById(R.id.btnUpdateProfile);
 
-        // Open gallery to choose profile picture
         btnChooseImage.setOnClickListener(v ->
                 openGallery()
         );
 
-        // Update profile information
         btnUpdateProfile.setOnClickListener(v ->
                 updateProfile()
         );
@@ -92,12 +108,9 @@ public class ProfileActivity extends AppCompatActivity {
                 && data != null
                 && data.getData() != null) {
 
-            selectedImageUri =
-                    data.getData();
+            selectedImageUri = data.getData();
 
-            imgProfile.setImageURI(
-                    selectedImageUri
-            );
+            imgProfile.setImageURI(selectedImageUri);
 
             Toast.makeText(
                     this,
@@ -137,7 +150,17 @@ public class ProfileActivity extends AppCompatActivity {
                         .toString()
                         .trim();
 
-        // Validate first name
+        if (currentUserEmail == null || currentUserEmail.isEmpty()) {
+
+            Toast.makeText(
+                    this,
+                    "User email not found",
+                    Toast.LENGTH_SHORT
+            ).show();
+
+            return;
+        }
+
         if (firstName.length() < 3) {
 
             etFirstName.setError(
@@ -147,7 +170,6 @@ public class ProfileActivity extends AppCompatActivity {
             return;
         }
 
-        // Validate last name
         if (lastName.length() < 3) {
 
             etLastName.setError(
@@ -157,7 +179,6 @@ public class ProfileActivity extends AppCompatActivity {
             return;
         }
 
-        // Validate phone number
         if (phone.isEmpty()) {
 
             etPhone.setError(
@@ -167,7 +188,8 @@ public class ProfileActivity extends AppCompatActivity {
             return;
         }
 
-        // Validate password if user enters a new one
+        String encryptedPassword = "";
+
         if (!password.isEmpty()) {
 
             if (password.length() < 6) {
@@ -196,12 +218,37 @@ public class ProfileActivity extends AppCompatActivity {
 
                 return;
             }
+
+            encryptedPassword =
+                    PasswordHelper.hashPassword(password);
         }
 
-        Toast.makeText(
-                this,
-                "Profile updated successfully",
-                Toast.LENGTH_SHORT
-        ).show();
+        boolean updated =
+                databaseHelper.updateUserProfile(
+                        currentUserEmail,
+                        firstName,
+                        lastName,
+                        phone,
+                        encryptedPassword
+                );
+
+        if (updated) {
+
+            Toast.makeText(
+                    this,
+                    "Profile updated successfully",
+                    Toast.LENGTH_SHORT
+            ).show();
+
+            finish();
+
+        } else {
+
+            Toast.makeText(
+                    this,
+                    "Failed to update profile",
+                    Toast.LENGTH_SHORT
+            ).show();
+        }
     }
 }

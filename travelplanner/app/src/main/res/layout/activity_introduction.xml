@@ -17,6 +17,7 @@
         android:text="Travel Planner"
         android:textSize="30sp"
         android:textStyle="bold"
+        android:textColor="#1F6F5F"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -33,14 +34,56 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txtTitle" />
 
+    <!-- Feature 1 -->
+    <TextView
+        android:id="@+id/txtFeature1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:background="#EEEEEE"
+        android:padding="12dp"
+        android:text="✓ Browse Trips&#10;Search, filter, and view trip details."
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txtDescription" />
+
+    <!-- Feature 2 -->
+    <TextView
+        android:id="@+id/txtFeature2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="#EEEEEE"
+        android:padding="12dp"
+        android:text="✓ Favorites&#10;Save trips and reserve later."
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txtFeature1" />
+
+    <!-- Feature 3 -->
+    <TextView
+        android:id="@+id/txtFeature3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="#EEEEEE"
+        android:padding="12dp"
+        android:text="✓ Reservations&#10;Manage your confirmed travel bookings."
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txtFeature2" />
+
     <Button
         android:id="@+id/btnConnect"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="80dp"
+        android:layout_marginTop="32dp"
         android:text="Connect"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txtFeature3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

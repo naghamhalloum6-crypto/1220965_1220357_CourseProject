@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.content.SharedPreferences;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -101,16 +102,24 @@ public class HomeActivity extends AppCompatActivity {
                         )
                 );
 
-            } else if (itemId == R.id.nav_profile) {
+            }  else if (itemId == R.id.nav_profile) {
 
-                startActivity(
-                        new Intent(
-                                HomeActivity.this,
-                                ProfileActivity.class
-                        )
-                );
+            SharedPreferences preferences =
+                    getSharedPreferences("travel_app", MODE_PRIVATE);
 
-            } else if (itemId == R.id.nav_contact) {
+            String currentEmail =
+                    preferences.getString("current_user_email", "");
+
+            Intent profileIntent =
+                    new Intent(
+                            HomeActivity.this,
+                            ProfileActivity.class
+                    );
+
+            profileIntent.putExtra("user_email", currentEmail);
+
+            startActivity(profileIntent);
+        } else if (itemId == R.id.nav_contact) {
 
                 startActivity(
                         new Intent(
@@ -199,7 +208,17 @@ public class HomeActivity extends AppCompatActivity {
 
         setupCountryFilter();
 
-        loadTripsFromApi();
+        SharedPreferences preferences =
+                getSharedPreferences("travel_app", MODE_PRIVATE);
+
+        boolean tripsInitialized =
+                preferences.getBoolean("trips_initialized", false);
+
+        if (tripsInitialized) {
+            loadTripsFromDatabase();
+        } else {
+            loadTripsFromApi();
+        }
 
         etSearch.addTextChangedListener(
                 new TextWatcher() {
@@ -277,22 +296,9 @@ public class HomeActivity extends AppCompatActivity {
 
                 for (Trip trip : trips) {
 
-                    if (databaseHelper.tripExists(
+                    if (!databaseHelper.tripExists(
                             trip.getId()
                     )) {
-
-                        databaseHelper.updateTrip(
-                                trip.getId(),
-                                trip.getDestination(),
-                                trip.getCountry(),
-                                trip.getDurationDays(),
-                                trip.getPrice(),
-                                trip.getRating(),
-                                trip.getDescription(),
-                                trip.getImage()
-                        );
-
-                    } else {
 
                         databaseHelper.insertTrip(
                                 trip.getId(),
@@ -306,6 +312,12 @@ public class HomeActivity extends AppCompatActivity {
                         );
                     }
                 }
+                SharedPreferences preferences =
+                        getSharedPreferences("travel_app", MODE_PRIVATE);
+
+                preferences.edit()
+                        .putBoolean("trips_initialized", true)
+                        .apply();
 
                 loadTripsFromDatabase();
 
