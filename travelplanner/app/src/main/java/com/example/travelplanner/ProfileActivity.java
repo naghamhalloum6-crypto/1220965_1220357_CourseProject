@@ -32,6 +32,7 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         imgProfile = findViewById(R.id.imgProfile);
+        imgProfile.setImageResource(R.mipmap.ic_launcher);
 
         etFirstName = findViewById(R.id.etFirstName);
         etLastName = findViewById(R.id.etLastName);

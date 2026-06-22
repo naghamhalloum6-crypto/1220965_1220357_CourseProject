@@ -40,7 +40,7 @@ public class HomeActivity extends AppCompatActivity {
     private TripAdapter tripAdapter;
 
     private static final String API_URL =
-            "https://mocki.io/v1/f3153911-eb21-4b36-8ca7-18ea3c77cc1a";
+            "https://mocki.io/v1/19a02615-be53-4213-a4c8-b5103e8cc367";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,12 +73,6 @@ public class HomeActivity extends AppCompatActivity {
             } else if (itemId == R.id.nav_trips) {
 
                 drawerLayout.closeDrawer(GravityCompat.START);
-
-                Toast.makeText(
-                        this,
-                        "Trips list",
-                        Toast.LENGTH_SHORT
-                ).show();
 
             } else if (itemId == R.id.nav_reservations) {
 
@@ -166,23 +160,13 @@ public class HomeActivity extends AppCompatActivity {
                 }
         );
 
-        recyclerTrips =
-                findViewById(R.id.recyclerTrips);
+        recyclerTrips = findViewById(R.id.recyclerTrips);
+        etSearch = findViewById(R.id.etSearch);
+        spCountryFilter = findViewById(R.id.spCountryFilter);
+        txtEmptyResult = findViewById(R.id.txtEmptyResult);
 
-        etSearch =
-                findViewById(R.id.etSearch);
-
-        spCountryFilter =
-                findViewById(R.id.spCountryFilter);
-
-        txtEmptyResult =
-                findViewById(R.id.txtEmptyResult);
-
-        tripList =
-                new ArrayList<>();
-
-        allTrips =
-                new ArrayList<>();
+        tripList = new ArrayList<>();
+        allTrips = new ArrayList<>();
 
         tripAdapter =
                 new TripAdapter(
@@ -195,40 +179,13 @@ public class HomeActivity extends AppCompatActivity {
                                             TripDetailsActivity.class
                                     );
 
-                            intent.putExtra(
-                                    "destination",
-                                    trip.getDestination()
-                            );
-
-                            intent.putExtra(
-                                    "country",
-                                    trip.getCountry()
-                            );
-
-                            intent.putExtra(
-                                    "duration",
-                                    trip.getDurationDays()
-                            );
-
-                            intent.putExtra(
-                                    "price",
-                                    trip.getPrice()
-                            );
-
-                            intent.putExtra(
-                                    "rating",
-                                    trip.getRating()
-                            );
-
-                            intent.putExtra(
-                                    "description",
-                                    trip.getDescription()
-                            );
-
-                            intent.putExtra(
-                                    "image",
-                                    trip.getImage()
-                            );
+                            intent.putExtra("destination", trip.getDestination());
+                            intent.putExtra("country", trip.getCountry());
+                            intent.putExtra("duration", trip.getDurationDays());
+                            intent.putExtra("price", trip.getPrice());
+                            intent.putExtra("rating", trip.getRating());
+                            intent.putExtra("description", trip.getDescription());
+                            intent.putExtra("image", trip.getImage());
 
                             startActivity(intent);
                         }
@@ -320,9 +277,22 @@ public class HomeActivity extends AppCompatActivity {
 
                 for (Trip trip : trips) {
 
-                    if (!databaseHelper.tripExists(
+                    if (databaseHelper.tripExists(
                             trip.getId()
                     )) {
+
+                        databaseHelper.updateTrip(
+                                trip.getId(),
+                                trip.getDestination(),
+                                trip.getCountry(),
+                                trip.getDurationDays(),
+                                trip.getPrice(),
+                                trip.getRating(),
+                                trip.getDescription(),
+                                trip.getImage()
+                        );
+
+                    } else {
 
                         databaseHelper.insertTrip(
                                 trip.getId(),
@@ -459,9 +429,7 @@ public class HomeActivity extends AppCompatActivity {
                     selectedCountry.equals("All Countries")
                             ||
                             trip.getCountry()
-                                    .equalsIgnoreCase(
-                                            selectedCountry
-                                    );
+                                    .equalsIgnoreCase(selectedCountry);
 
             boolean matchesSearch =
                     trip.getDestination()
@@ -469,7 +437,6 @@ public class HomeActivity extends AppCompatActivity {
                             .contains(keyword);
 
             if (matchesCountry && matchesSearch) {
-
                 tripList.add(trip);
             }
         }
@@ -477,11 +444,8 @@ public class HomeActivity extends AppCompatActivity {
         tripAdapter.notifyDataSetChanged();
 
         if (tripList.isEmpty()) {
-
             txtEmptyResult.setVisibility(View.VISIBLE);
-
         } else {
-
             txtEmptyResult.setVisibility(View.GONE);
         }
     }
