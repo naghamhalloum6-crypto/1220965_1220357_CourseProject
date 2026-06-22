@@ -17,7 +17,7 @@ public class FavoritesActivity extends AppCompatActivity {
     private TextView txtEmptyFavorites;
 
     private ArrayList<Trip> favoriteTrips;
-    private TripAdapter tripAdapter;
+    private FavoriteAdapter favoriteAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,61 +33,17 @@ public class FavoritesActivity extends AppCompatActivity {
         favoriteTrips =
                 new ArrayList<>();
 
-        tripAdapter =
-                new TripAdapter(
+        favoriteAdapter =
+                new FavoriteAdapter(
                         favoriteTrips,
-                        trip -> {
-                            // Open selected favorite trip details
-                            android.content.Intent intent =
-                                    new android.content.Intent(
-                                            FavoritesActivity.this,
-                                            TripDetailsActivity.class
-                                    );
-
-                            intent.putExtra(
-                                    "destination",
-                                    trip.getDestination()
-                            );
-
-                            intent.putExtra(
-                                    "country",
-                                    trip.getCountry()
-                            );
-
-                            intent.putExtra(
-                                    "duration",
-                                    trip.getDurationDays()
-                            );
-
-                            intent.putExtra(
-                                    "price",
-                                    trip.getPrice()
-                            );
-
-                            intent.putExtra(
-                                    "rating",
-                                    trip.getRating()
-                            );
-
-                            intent.putExtra(
-                                    "description",
-                                    trip.getDescription()
-                            );
-
-                            intent.putExtra(
-                                    "image",
-                                    trip.getImage()
-                            );
-
-                            startActivity(intent);
-                        }
+                        this::loadFavorites
                 );
 
         recyclerFavorites.setLayoutManager(
                 new LinearLayoutManager(this)
         );
 
-        recyclerFavorites.setAdapter(tripAdapter);
+        recyclerFavorites.setAdapter(favoriteAdapter);
 
         loadFavorites();
     }
@@ -131,7 +87,7 @@ public class FavoritesActivity extends AppCompatActivity {
             cursor.close();
         }
 
-        tripAdapter.notifyDataSetChanged();
+        favoriteAdapter.notifyDataSetChanged();
 
         if (favoriteTrips.isEmpty()) {
 

@@ -37,6 +37,7 @@ public class ReservationsActivity extends AppCompatActivity {
             do {
                 reservationsText.append("Trip: ")
                         .append(cursor.getString(1))
+                        .append("\nStatus: Confirmed")
                         .append("\nQuantity: ")
                         .append(cursor.getInt(2))
                         .append("\nType: ")
